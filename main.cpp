@@ -50,10 +50,10 @@ void add_script()
 {
     string filename, content;
     cout << "Nombre del nuevo archivo: ";
-    cin >> filename;
+    cin.ignore(); // Ignora el salto de línea pendiente del input anterior
+    getline(cin, filename);
 
     cout << "Contenido del nuevo archivo (termina con EOF/CTRL+D en Unix, CTRL+Z en Windows):" << endl;
-    cin.ignore(); // Ignora el salto de línea pendiente del input anterior
     getline(cin, content, '\0');
 
     ofstream file(filename, ios::binary);
@@ -73,7 +73,7 @@ int main()
 {
     cout << "Introduce el nombre del archivo a cargar: ";
     string filename;
-    cin >> filename;
+    getline(cin, filename);
     load_script(filename, true);
     return 0;
 }
