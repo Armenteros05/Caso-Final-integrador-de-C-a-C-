@@ -41,7 +41,7 @@ bool load_script(const char* filename, bool show_script = false)
 
     if (file.fail() && !file.eof())
     {
-        cerr << "Error: Fallo durante la lectura del archivo '" << filename << "'. Asegúrate de que el archivo no esté dañado." << endl;
+        cerr << "Error: Fallo durante la lectura del archivo '" << filename << "'. Asegurate de que el archivo no este dañado." << endl;
         return false;
     }
 
@@ -52,7 +52,7 @@ bool load_script(const char* filename, bool show_script = false)
     }
     consoleBox->new_text();
 
-    cout << "Archivo '" << filename << "' leído exitosamente." << endl;
+    cout << "Archivo '" << filename << "' leido exitosamente." << endl;
     return true;  // Indicar éxito en la carga del archivo
 }
 
@@ -67,7 +67,7 @@ void save_script(const char* filename, const string &content)
     }
     else
     {
-        cerr << "Error al guardar el archivo '" << filename << "'. Comprueba que tengas permisos para escribir en la ubicación especificada." << endl;
+        cerr << "Error al guardar el archivo '" << filename << "'. Comprueba que tengas permisos para escribir en la ubicacion especificada." << endl;
     }
 }
 
@@ -110,7 +110,7 @@ int main()
 
         while (!file_exists(filename))
         {
-            cerr << "Error: El archivo '" << filename << "' no existe. Inténtalo de nuevo (o 'new' para crear uno nuevo): ";
+            cerr << "Error: El archivo '" << filename << "' no existe. Intentalo de nuevo (o 'new' para crear uno nuevo): ";
             getline(cin, filename);
 
             if (filename == "exit")
@@ -129,7 +129,7 @@ int main()
             if (file.is_open())
             {
                 string line;
-                cout << "\nContenido del archivo después de cargar:" << endl;
+                cout << "\nContenido del archivo despues de cargar:" << endl;
                 while (getline(file, line))
                 {
                     cout << line << endl;
