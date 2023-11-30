@@ -62,6 +62,21 @@ bool load_script(const char* filename, bool show_script = false)
     return true;  // Indicar éxito en la carga del archivo
 }
 
+void save_script(const char* filename, const string &content)
+{
+    ofstream file(filename, ios::binary);
+    if (file.is_open())
+    {
+        file << content;
+        file.close();
+        cout << "Archivo '" << filename << "' guardado exitosamente." << endl;
+    }
+    else
+    {
+        cerr << "Error al guardar el archivo '" << filename << "'. Comprueba que tengas permisos para escribir en la ubicación especificada." << endl;
+    }
+}
+
 void add_script()
 {
     string filename, content;
@@ -78,27 +93,40 @@ void add_script()
     cout << "Contenido del nuevo archivo (termina con EOF/CTRL+D en Unix, CTRL+Z en Windows):" << endl;
     getline(cin, content, '\0');
 
-    ofstream file(filename, ios::binary);
-    if (file.is_open())
-    {
-        file << content;
-        file.close();
-        cout << "Archivo '" << filename << "' creado exitosamente." << endl;
-    }
-    else
-    {
-        cerr << "Error al crear el archivo '" << filename << "'. Comprueba que tengas permisos para escribir en la ubicación especificada." << endl;
-    }
+    save_script(filename.c_str(), content);
 }
 
 int main()
 {
-    cout << "Introduce el nombre del archivo a cargar: ";
-    string filename;
-    getline(cin, filename);
+    while (true)
+    {
+        cout << "Introduce el nombre del archivo a cargar (o 'exit' para salir): ";
+        string filename;
+        getline(cin, filename);
 
-    // Modificado para usar la bandera de error
-    load_script(filename.c_str(), true);
+        if (filename == "exit")
+            break;
+
+        if (load_script(filename.c_str(), true))
+        {
+            cout << "\nContenido del archivo después de cargar:" << endl;
+            consoleBox->new_text();
+        }
+
+        char option;
+        cout << "¿Quieres crear un nuevo archivo? (y/n): ";
+        cin >> option;
+
+        if (option == 'y' || option == 'Y')
+        {
+            cin.ignore(); // Limpiar el buffer del salto de línea
+            add_script();
+        }
+        else
+        {
+            break; // Salir del bucle si no se desea crear un nuevo archivo
+        }
+    }
 
     return 0;
 }
