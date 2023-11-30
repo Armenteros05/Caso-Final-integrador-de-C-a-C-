@@ -80,9 +80,11 @@ void save_script(const char* filename, const string &content)
 void add_script()
 {
     string filename, content;
-    cout << "Nombre del nuevo archivo: ";
-    cin.ignore(); // Ignora el salto de línea pendiente del input anterior
+    cout << "Nombre del nuevo archivo (o 'exit' para salir): ";
     getline(cin, filename);
+
+    if (filename == "exit")
+        return;
 
     if (file_exists(filename))
     {
@@ -90,8 +92,8 @@ void add_script()
         return;
     }
 
-    cout << "Contenido del nuevo archivo (termina con EOF/CTRL+D en Unix, CTRL+Z en Windows):" << endl;
-    getline(cin, content, '\0');
+    cout << "Contenido del nuevo archivo (termina con Enter para guardar y salir):" << endl;
+    getline(cin, content);
 
     save_script(filename.c_str(), content);
 }
@@ -113,19 +115,7 @@ int main()
             consoleBox->new_text();
         }
 
-        char option;
-        cout << "¿Quieres crear un nuevo archivo? (y/n): ";
-        cin >> option;
-
-        if (option == 'y' || option == 'Y')
-        {
-            cin.ignore(); // Limpiar el buffer del salto de línea
-            add_script();
-        }
-        else
-        {
-            break; // Salir del bucle si no se desea crear un nuevo archivo
-        }
+        add_script();
     }
 
     return 0;
