@@ -22,13 +22,6 @@ bool file_exists(const string &filename)
 
 bool load_script(const char* filename, bool show_script = false)
 {
-    if (!file_exists(filename))
-    {
-        cerr << "Error: El archivo '" << filename << "' no existe." << endl;
-        return false;
-    }
-
-    string script;
     ifstream file(filename, ios::binary);
     if (!file.is_open())
     {
@@ -36,6 +29,7 @@ bool load_script(const char* filename, bool show_script = false)
         return false;
     }
 
+    string script;
     char buf[4001];
     while (file.read(buf, sizeof(buf) - 1))
     {
@@ -102,20 +96,47 @@ int main()
 {
     while (true)
     {
-        cout << "Introduce el nombre del archivo a cargar (o 'exit' para salir): ";
+        cout << "Introduce el nombre del archivo a cargar (o 'exit' para salir o 'new' para crear uno nuevo): ";
         string filename;
         getline(cin, filename);
 
         if (filename == "exit")
             break;
+        else if (filename == "new")
+        {
+            add_script();
+            continue;
+        }
+
+        while (!file_exists(filename))
+        {
+            cerr << "Error: El archivo '" << filename << "' no existe. Inténtalo de nuevo (o 'new' para crear uno nuevo): ";
+            getline(cin, filename);
+
+            if (filename == "exit")
+                return 0;
+            else if (filename == "new")
+            {
+                add_script();
+                break;
+            }
+        }
 
         if (load_script(filename.c_str(), true))
         {
-            cout << "\nContenido del archivo después de cargar:" << endl;
-            consoleBox->new_text();
+            // Lee el contenido del archivo y lo imprime
+            ifstream file(filename);
+            if (file.is_open())
+            {
+                string line;
+                cout << "\nContenido del archivo después de cargar:" << endl;
+                while (getline(file, line))
+                {
+                    cout << line << endl;
+                }
+                file.close();
+            }
         }
-
-        add_script();
     }
 
     return 0;
