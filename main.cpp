@@ -6,12 +6,6 @@
 using namespace std;
 namespace fs = filesystem;
 
-struct ColorConsole
-{
-    static constexpr auto fg_blue = "\033[34m";
-    static constexpr auto bg_white = "\033[47m";
-};
-
 struct ConsoleBox
 {
     void new_text() {/*...*/}
@@ -20,23 +14,14 @@ struct ConsoleBox
 
 ConsoleBox *consoleBox = new ConsoleBox; // suponemos que ya está inicializado
 
-void print_current_directory()
-{
-    fs::path current_path = fs::current_path();
-    cout << "Directorio actual: " << current_path << endl;
-}
-
 bool file_exists(const string &filename)
 {
     ifstream file(filename);
     return file.good();
 }
 
-// Modificamos la función para que devuelva un valor indicando éxito o fracaso
 bool load_script(const char* filename, bool show_script = false)
 {
-    print_current_directory();  // Imprimir el directorio actual
-
     if (!file_exists(filename))
     {
         cerr << "Error: El archivo '" << filename << "' no existe." << endl;
@@ -47,7 +32,7 @@ bool load_script(const char* filename, bool show_script = false)
     ifstream file(filename, ios::binary);
     if (!file.is_open())
     {
-        cerr << "Error: No se pudo abrir el archivo '" << filename << "'" << endl;
+        cerr << "Error: No se pudo abrir el archivo '" << filename << "'. Comprueba que tengas permisos para leer el archivo." << endl;
         return false;
     }
 
@@ -62,18 +47,18 @@ bool load_script(const char* filename, bool show_script = false)
 
     if (file.fail() && !file.eof())
     {
-        cerr << "Error: Fallo durante la lectura del archivo '" << filename << "'" << endl;
+        cerr << "Error: Fallo durante la lectura del archivo '" << filename << "'. Asegúrate de que el archivo no esté dañado." << endl;
         return false;
     }
 
     if (show_script)
     {
-        cout << ColorConsole::fg_blue << ColorConsole::bg_white;
+        cout << "Contenido del archivo '" << filename << "':" << endl;
         cout << script << endl;
     }
     consoleBox->new_text();
-    consoleBox->set_text(script);
 
+    cout << "Archivo '" << filename << "' leído exitosamente." << endl;
     return true;  // Indicar éxito en la carga del archivo
 }
 
@@ -102,7 +87,7 @@ void add_script()
     }
     else
     {
-        cerr << "Error al crear el archivo '" << filename << "'" << endl;
+        cerr << "Error al crear el archivo '" << filename << "'. Comprueba que tengas permisos para escribir en la ubicación especificada." << endl;
     }
 }
 
@@ -113,11 +98,7 @@ int main()
     getline(cin, filename);
 
     // Modificado para usar la bandera de error
-    if (!load_script(filename.c_str(), true))
-    {
-        // Manejar el error según los requisitos
-        return 1;  // Código de error para indicar fallo en la carga del archivo
-    }
+    load_script(filename.c_str(), true);
 
     return 0;
 }
