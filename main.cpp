@@ -18,13 +18,25 @@ struct ConsoleBox
 
 ConsoleBox *consoleBox = new ConsoleBox; // suponemos que ya está inicializado
 
+bool file_exists(const string &filename)
+{
+    ifstream file(filename);
+    return file.good();
+}
+
 void load_script(const string &filename, bool show_script = false)
 {
+    if (!file_exists(filename))
+    {
+        cerr << "El archivo '" << filename << "' no existe." << endl;
+        return;
+    }
+
     string script;
     ifstream file(filename, ios::binary);
     if (!file.is_open())
     {
-        cerr << "Error de apertura de " << filename << endl;
+        cerr << "Error al abrir el archivo '" << filename << "'" << endl;
         return;
     }
 
@@ -52,6 +64,12 @@ void add_script()
     cout << "Nombre del nuevo archivo: ";
     cin.ignore(); // Ignora el salto de línea pendiente del input anterior
     getline(cin, filename);
+
+    if (file_exists(filename))
+    {
+        cerr << "El archivo '" << filename << "' ya existe. Utiliza un nombre diferente." << endl;
+        return;
+    }
 
     cout << "Contenido del nuevo archivo (termina con EOF/CTRL+D en Unix, CTRL+Z en Windows):" << endl;
     getline(cin, content, '\0');
